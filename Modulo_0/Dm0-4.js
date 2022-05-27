@@ -8,38 +8,57 @@
 */
 var prompt = require('prompt-sync')();
 
-console.log("#######################################");
-console.log("####   CAIXA ELETRÔNICO BLU-BANK   ####");
-console.log("#######################################\n");
+console.log('#######################################');
+console.log('####   CAIXA ELETRÔNICO BLU-BANK   ####');
+console.log('#######################################\n');
 
-console.log("\nNotas disponíveis R$:  [1], [5], [10], [50], [100]");
-console.log("\nOpção [SAQUE] selecionada.\nSaque Mínimo: R$[10,00]\nSaque Máximo: R$[600,00]\n");
+console.log('\nNotas disponíveis R$:  [1], [5], [10], [50], [100]');
+console.log(
+    '\nOpção [SAQUE] selecionada.\nSaque Mínimo: R$[10,00]\nSaque Máximo: R$[600,00]\n',
+);
 
 const notas_maquina = [100, 50, 10, 5, 1];
 let notas_saque = [];
-let saque = parseInt(prompt("Valor do Saque em BRL: "));
+let saque = parseInt(prompt('Valor do Saque em BRL: '));
 const valor = saque;
 
 if (saque >= 10 && saque <= 600) {
     for (let i = 0; i < notas_maquina.length; i++) {
         const element = parseInt(notas_maquina[i]);
-        const num_n = parseInt(saque/element);
+        const num_n = parseInt(saque / element);
         notas_saque.push(num_n);
-        saque = saque - num_n*element;
+        saque = saque - num_n * element;
         // console.log(saque, notas_saque);
     }
 
     for (let i = 0; i < notas_maquina.length; i++) {
         const element = notas_saque[i];
         if (element != 0) {
-            console.log("Sacada(s) " + element + " nota(s) de " + notas_maquina[i] + " reais [BRL]");
+            console.log(
+                'Sacada(s) ' +
+                    element +
+                    ' nota(s) de ' +
+                    notas_maquina[i] +
+                    ' reais [BRL]',
+            );
         }
     }
-    
-    console.log("\nSaque de " + notas_saque.reduce((a, b) => a + b, 0) + " notas, totalizando R$ " + valor.toFixed(2));
-    console.log("\nObrigado e volte sempre!!!\n\n");
 
+    console.log(
+        '\nSaque de ' +
+            notas_saque.reduce((a, b) => a + b, 0) +
+            ' notas, totalizando R$ ' +
+            valor.toFixed(2),
+    );
+    console.log('\nObrigado e volte sempre!!!\n\n');
+
+    console.log(
+        '\nSaque de ' +
+            notas_saque.reduce((a, b) => a + b, 0) +
+            ' notas, totalizando R$ ' +
+            valor.toFixed(2),
+    );
+    console.log('\nObrigado e volte sempre!!!\n\n');
 } else {
-    console.log("\nValor de SAQUE INVÁLIDO!!!\nTente Novamente...\n\n");
+    console.log('\nValor de SAQUE INVÁLIDO!!!\nTente Novamente...\n\n');
 }
-
