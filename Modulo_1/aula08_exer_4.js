@@ -9,7 +9,7 @@
 const prompt = require('prompt-sync')();
 console.clear();
 
-let carros = ['a', 'b', 'c', 'd', 'e'],
+let carros = ['A', 'B', 'C', 'D', 'E'],
     consumos = [6.3, 5.3, 9.3, 8.8, 6.1],
     litros_milkm = [],
     menor = 0,
@@ -30,7 +30,7 @@ for (let index = 0; index < carros.length; index++) {
     console.log(
         `O modelo ${carros[index]} consome ${
             litros_milkm[index]
-        } litros a cada 1000Km - Custando [BRL] ${(
+        } litros a cada 1000 Km - Custando [BRL] ${(
             litros_milkm[index] * gasolina
         ).toFixed(2)}`,
     );
