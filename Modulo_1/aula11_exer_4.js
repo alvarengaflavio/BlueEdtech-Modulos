@@ -8,3 +8,7 @@
 	2. Opção: em duas vezes (preço da etiqueta)
 	3. Opção: de 3 até 10 vezes com 3% de juros ao mês (somente para compras acima de R$ 100,00).
 */
+const prompt = require('prompt-sync')();
+console.clear();
+
+let balanco = { Opção_1: 0, Opção_2: 0, Opção_3: 0, Total: 0 };
