@@ -21,7 +21,7 @@ while (true) {
     }
 }
 while (true) {
-    let taxa_cres = parseInt(prompt(`Taxa de Crescimento País A [%]: `));
+    let taxa_cres = parseFloat(prompt(`Taxa de Crescimento País A [%]: `));
     if (isNaN(taxa_cres) || taxa_cres < 1)
         console.log('\t\t\t\t\t\tTaxa deve ser positiva e > 1%...');
     else {
