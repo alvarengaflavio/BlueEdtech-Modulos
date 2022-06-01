@@ -10,7 +10,7 @@ function operacoes(n1, n2) {
 
 operacoes(8, 4);
 console.log();
-operacoes(3.14, 2.71);
+operacoes(3.14, 2.72);
 console.log();
 operacoes(2, 0);
 console.log();
