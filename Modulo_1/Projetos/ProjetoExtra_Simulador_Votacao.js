@@ -17,8 +17,8 @@
             * O total de votos em branco
             * Qual candidato venceu a votação
 */
-const prompt = require('prompt-sync')();
 console.clear();
+const prompt = require('prompt-sync')();
 let votos = [0, 0, 0, 0, 0];
 
 function autorizaVoto(anoNascimento) {
