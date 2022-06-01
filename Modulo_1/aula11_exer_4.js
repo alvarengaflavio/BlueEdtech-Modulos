@@ -74,12 +74,20 @@ function valorCompra() {
     }
 }
 
+function imprimeBalanco() {
+    console.log(`\nBalanço de Vendas`);
+    console.log(`Vendas à Vista:          ${balanco['Opção_1']}`);
+    console.log(`Vendas em Duas parcelas: ${balanco['Opção_2']}`);
+    console.log(`Vendas 3 a 10 parcelas:  ${balanco['Opção_3']}`);
+    console.log(`Valor Total em Caixa R$: ${balanco[`Total`].toFixed(2)}\n`);
+}
+
 // main()
 while (true) {
     compra = valorCompra();
     if (compra) calculaPagamento(compra);
     else {
-        console.log(balanco);
+        imprimeBalanco();
         break;
     }
 }
