@@ -119,14 +119,14 @@ function main() {
         console.log();
 
         for (let r = 0; r < n_rodadas; r++) {
-            jogadores.forEach(element => {
-                element.dado.unshift(rolarDado());
+            jogadores.forEach(jogador => {
+                jogador.dado.unshift(rolarDado());
             });
             defineVencedor(jogadores);
         }
 
-        jogadores.forEach(element => {
-            element.imprimeJogador();
+        jogadores.forEach(jogador => {
+            jogador.imprimeJogador();
         });
         defineCampeao(jogadores);
 
