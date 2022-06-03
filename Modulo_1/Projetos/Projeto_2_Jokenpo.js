@@ -20,9 +20,6 @@
 const prompt = require('prompt-sync')();
 console.clear();
 
-let placar = { Jogador: 0, Computador: 0, Rodadas: 0 };
-let rodadas;
-
 function setValor(jogada) {
     // Pedra = 0, Papel = 1, Tesoura = 2
     if (jogada === 'pedra') {
@@ -34,44 +31,47 @@ function setValor(jogada) {
     }
 }
 
-function setRodadas() {
+function setRodadas(rodadas) {
     while (true) {
-        const _rodadas = parseInt(prompt(`Quantas Rodadas? `));
-        if (isNaN(_rodadas) || _rodadas < 1)
-            console.log('\nNº de rodadas deve ser iteiro positivo...\n');
-        else {
-            rodadas = _rodadas;
-            return;
+        try {
+            const _rodadas = parseInt(prompt(`Quantas Rodadas? `));
+            if (isNaN(_rodadas) || _rodadas < 1)
+                throw 'Nº de rodadas deve ser inteiro positivo...';
+            return _rodadas;
+        } catch (error) {
+            console.log(`\n${error}\n`);
         }
     }
 }
 
-function atualizaPlacar(vencedor) {
+function atualizaPlacar(vencedor, placar) {
     if (vencedor) placar[vencedor] += 1;
-    placar[`Rodadas`] += 1;
+    placar['Rodadas'] += 1;
 }
 
-function zeraPlacar() {
+function zeraPlacar(placar) {
     placar['Jogador'] = 0;
     placar['Computador'] = 0;
     placar['Rodadas'] = 0;
-    setRodadas();
+    return setRodadas();
 }
 
 function jogarNovamente() {
     while (true) {
-        const rejogar = prompt(`Deseja Jogar Novamente? `).trim().toLowerCase();
-        if (rejogar === 'sim') {
-            return true;
-        } else if (rejogar === 'nao') {
-            return false;
-        } else {
-            console.log(`\nDigite SIM ou NAO ...\n`);
+        try {
+            const rejogar = prompt(`Deseja Jogar Novamente? `)
+                .trim()
+                .toLowerCase();
+            if (rejogar === 'sim' || rejogar === 's') return true;
+            else if (rejogar === 'nao' || rejogar === 'n') return false;
+            throw 'Digite SIM ou NAO ...';
+        } catch (error) {
+            console.log(`\n${error}\n`);
         }
     }
 }
 
-function imprimePlacar() {
+function imprimePlacar(placar) {
     console.log(`\n###### PLACAR FINAL ######`);
     console.log(`Rodadas Disputadas:     ${placar['Rodadas']}`);
     console.log(`Vitórias do Jogador:    ${placar['Jogador']}`);
@@ -85,53 +85,65 @@ function imprimePlacar() {
     }
 }
 
-function getJogada() {
+function getJogada(placar) {
     while (true) {
-        let jogada = prompt(`${placar['Rodadas'] + 1}ª Jogada: `)
-            .trim()
-            .toLowerCase();
-        if (jogada === 'pedra' || jogada === 'papel' || jogada === 'tesoura') {
-            jogada = setValor(jogada);
-            return jogada;
-        } else {
-            console.log(`\nJogada Inválida, Digite Novamente...\n`);
+        try {
+            let jogada = prompt(`${placar['Rodadas'] + 1}ª Jogada: `)
+                .trim()
+                .toLowerCase();
+            if (
+                jogada === 'pedra' ||
+                jogada === 'papel' ||
+                jogada === 'tesoura'
+            )
+                return setValor(jogada);
+            else if (jogada === '0' || jogada === '1' || jogada === '2')
+                return parseInt(jogada);
+            throw 'Jogada Inválida, Digite Novamente...';
+        } catch (error) {
+            console.log(`\n${error}\n`);
         }
     }
 }
 
-function jokenpo(jogador) {
+function jokenpo(jogador, placar) {
     // Gera jogada_COMPUTADOR-> (0 Pedra), (1 Papel), (2 Tesoura)
     const computador = Math.floor(Math.random() * 3);
     // Jogador VENCE SE: (Pedra - Tesoura = -2) || (Papel - Pedra = 1) || (Tesoura - Papel = 1)
     if (jogador === computador) {
-        atualizaPlacar(false);
+        atualizaPlacar(false, placar);
         console.log('Empate! Ninguém venceu essa rodada.\n');
     } else if (jogador - computador === -2 || jogador - computador === 1) {
-        atualizaPlacar('Jogador');
+        atualizaPlacar('Jogador', placar);
         console.log('Jogador venceu essa rodada\n');
     } else {
-        atualizaPlacar('Computador');
+        atualizaPlacar('Computador', placar);
         console.log('Computador venceu essa rodada\n');
     }
 }
 
 // MAIN
-console.log('\n#####\t\tJOKENPÔ \t#####\n');
-zeraPlacar();
-console.log('\n#####\tDigite Sua Jogada\t#####');
-console.log('Entradas: Pedra, Papel ou Tesoura\n');
+function main() {
+    let placar = { Jogador: 0, Computador: 0, Rodadas: 0 };
+    let rodadas = zeraPlacar(placar);
 
-while (true) {
-    const jogada_jogador = getJogada();
-    jokenpo(jogada_jogador);
+    console.log('\n#####\t\tJOKENPÔ \t#####\n');
+    console.log('\n#####\tDigite Sua Jogada\t#####');
+    console.log('Entradas: Pedra, Papel ou Tesoura\n');
 
-    if (rodadas === placar['Rodadas']) {
-        imprimePlacar();
-        if (jogarNovamente()) {
-            zeraPlacar();
-        } else {
-            console.log('\nObrigado por Jogar JOKENPÔ!!!\n\n');
-            break;
+    loopPrincipal: while (true) {
+        const jogada_jogador = getJogada(placar);
+        jokenpo(jogada_jogador, placar);
+
+        if (rodadas === placar['Rodadas']) {
+            imprimePlacar(placar);
+            if (jogarNovamente()) {
+                rodadas = zeraPlacar(placar);
+            } else {
+                console.log('\nObrigado por Jogar JOKENPÔ!!!\n\n');
+                break loopPrincipal;
+            }
         }
     }
 }
+main();
