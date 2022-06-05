@@ -8,9 +8,13 @@ function iniciaMatriz(matriz) {
     }
 }
 
-function imprimeMatriz(matriz) {
+function imprimeMatriz(matriz, placar) {
     console.clear();
-    console.log('  Posições\t\t    JOGO\n');
+    console.log('\t\tPLACAR');
+    console.log(
+        `\tJOGADOR ${placar.Jogador} x ${placar.Computador} COMPUTADOR\n`,
+    );
+    console.log('  Posições\t\t    JOGO');
     console.log(
         ` ${1} | ${2} | ${3}\t\t ${matriz[0][0]} | ${matriz[0][1]} | ${
             matriz[0][2]
@@ -30,12 +34,40 @@ function imprimeMatriz(matriz) {
     );
 }
 
-function anunciaVencedor(vencedor, matriz) {
-    imprimeMatriz(matriz);
-    if (vencedor === 'X') console.log('\n\tVOCÊ VENCEU!!!\t☜(ﾟヮﾟ☜)\n');
-    else if (vencedor === 'O')
-        console.log('\n\tO COMPUTADOR VENCEU!!!\t(╯°□°）╯︵ ┻━┻\n');
-    else console.log('\n\tDEU VELHA!!!\t¯_(ツ)_/¯\n');
+function anunciaVencedor(vencedor, matriz, placar) {
+    let mensagem;
+    if (vencedor === 'X') {
+        mensagem = '\tVOCÊ VENCEU!!!\t☜(ﾟヮﾟ☜)\n';
+        placar['Jogador'] += 1;
+    } else if (vencedor === 'O') {
+        mensagem = '\tO COMPUTADOR VENCEU!!!\t(╯°□°）╯︵ ┻━┻\n';
+        placar['Computador'] += 1;
+    } else mensagem = '\tDEU VELHA!!!\t¯_(ツ)_/¯\n';
+    imprimeMatriz(matriz, placar);
+    console.log(mensagem);
+}
+
+function anunciaCampeao(placar) {
+    let mensagem;
+    console.log(
+        `\n\tJOGADOR ${placar.Jogador} x ${placar.Computador} COMPUTADOR\n`,
+    );
+    if (placar['Jogador'] > placar['Computador']) {
+        mensagem = '\tVOCÊ FOI O GRANDE CAMPEÃO!!!\t☜(ﾟヮﾟ☜)\n';
+    } else if (placar['Jogador'] < placar['Computador']) {
+        mensagem = '\tO COMPUTADOR FOI O GRANDE CAMPEÃO!!!\t(╯°□°）╯︵ ┻━┻\n';
+    } else mensagem = '\tEMPATOU!!! NÃO TEMOS UM CAMPEÃO!!!\t¯_(ツ)_/¯\n';
+    console.log(mensagem);
+}
+
+function novaRodada(matriz, vencedor, placar) {
+    for (let i = 0; i < matriz.length; i++) {
+        for (let j = 0; j < matriz.length; j++) {
+            matriz[i][j] = ' ';
+        }
+    }
+    vencedor = false;
+    imprimeMatriz(matriz, placar);
 }
 
 function lerPosicao(num) {
@@ -66,6 +98,19 @@ function lerJogada(matriz) {
             else if (validaPosicao(jogada, matriz))
                 throw '\t\t\t\tposição ocupada... [1:9]';
             return jogada;
+        } catch (error) {
+            console.log(`${error}`);
+        }
+    }
+}
+
+function lerMenu() {
+    while (true) {
+        try {
+            const menu = prompt(`Jogar mais uma rodada? `).trim().toLowerCase();
+            if (menu === 's' || menu === 'sim') return true;
+            else if (menu === 'n' || menu === 'nao') return false;
+            else throw '\t\t\t\tresponda com Sim ou Nao...';
         } catch (error) {
             console.log(`${error}`);
         }
@@ -125,10 +170,11 @@ function matrizCheia(matriz) {
 
 function main() {
     let matriz = [];
+    let placar = { Jogador: 0, Computador: 0 };
     let vencedor = false;
     let indica_turno = Math.floor(Math.random() * 2);
     iniciaMatriz(matriz);
-    imprimeMatriz(matriz);
+    imprimeMatriz(matriz, placar);
 
     loopPrincipal: while (true) {
         if (indica_turno % 2 === 0)
@@ -138,15 +184,24 @@ function main() {
         vencedor = checaVencedor(matriz);
 
         if (vencedor) {
-            anunciaVencedor(vencedor, matriz);
+            anunciaVencedor(vencedor, matriz, placar);
+            if (lerMenu()) {
+                novaRodada(matriz, vencedor, placar);
+                continue loopPrincipal;
+            }
             break loopPrincipal;
         } else if (matrizCheia(matriz)) {
-            anunciaVencedor('velha', matriz);
+            anunciaVencedor('velha', matriz, placar);
+            if (lerMenu()) {
+                novaRodada(matriz, vencedor, placar);
+                continue loopPrincipal;
+            }
             break loopPrincipal;
         }
         indica_turno++;
-        imprimeMatriz(matriz);
+        imprimeMatriz(matriz, placar);
     }
+    anunciaCampeao(placar);
 }
 
 main();
