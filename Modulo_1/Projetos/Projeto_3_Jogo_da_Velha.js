@@ -183,21 +183,15 @@ function main() {
 
         vencedor = checaVencedor(matriz);
 
-        if (vencedor) {
+        if (vencedor || matrizCheia(matriz)) {
             anunciaVencedor(vencedor, matriz, placar);
             if (lerMenu()) {
                 novaRodada(matriz, vencedor, placar);
                 continue loopPrincipal;
             }
             break loopPrincipal;
-        } else if (matrizCheia(matriz)) {
-            anunciaVencedor('velha', matriz, placar);
-            if (lerMenu()) {
-                novaRodada(matriz, vencedor, placar);
-                continue loopPrincipal;
-            }
-            break loopPrincipal;
         }
+
         indica_turno++;
         imprimeMatriz(matriz, placar);
     }
