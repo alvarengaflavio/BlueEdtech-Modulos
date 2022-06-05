@@ -104,7 +104,7 @@ function lerJogada(matriz) {
     }
 }
 
-function lerMenu() {
+function jogarNovamente() {
     while (true) {
         try {
             const menu = prompt(`Jogar mais uma rodada? `).trim().toLowerCase();
@@ -185,11 +185,10 @@ function main() {
 
         if (vencedor || matrizCheia(matriz)) {
             anunciaVencedor(vencedor, matriz, placar);
-            if (lerMenu()) {
+            if (jogarNovamente()) {
                 novaRodada(matriz, vencedor, placar);
                 continue loopPrincipal;
-            }
-            break loopPrincipal;
+            } else break loopPrincipal;
         }
 
         indica_turno++;
