@@ -129,14 +129,14 @@ function checaAI(matriz) {
 
 function validaPosicao(num, matriz) {
     const [i, j] = lerPosicao(num);
-    if (matriz[i][j] === ' ') return false;
-    else return true;
+    if (matriz[i][j] === ' ') return true;
+    else return false;
 }
 
 function computadorJoga(matriz) {
     while (true) {
         const _jogada = checaAI(matriz) || Math.floor(Math.random() * 9 + 1);
-        if (!validaPosicao(_jogada, matriz)) return _jogada;
+        if (validaPosicao(_jogada, matriz)) return _jogada;
     }
 }
 
@@ -146,7 +146,7 @@ function lerJogada(matriz) {
             const jogada = parseInt(prompt(`Jogar em qual posição? `));
             if (isNaN(jogada) || jogada < 1 || jogada > 9)
                 throw '\t\t\t\tposição inválida... [1:9]';
-            else if (validaPosicao(jogada, matriz))
+            else if (!validaPosicao(jogada, matriz))
                 throw '\t\t\t\tposição ocupada... [1:9]';
             return jogada;
         } catch (error) {
