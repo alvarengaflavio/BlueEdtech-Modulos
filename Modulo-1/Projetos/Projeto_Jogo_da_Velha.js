@@ -12,7 +12,7 @@ function imprimeMatriz(matriz, placar) {
     console.clear();
     console.log('\t\tPLACAR');
     console.log(
-        `\tJOGADOR ${placar.Jogador} x ${placar.Computador} COMPUTADOR\n`,
+        `      JOGADOR[X] ${placar.Jogador} x ${placar.Computador} JOGADOR[O]\n`,
     );
     console.log('  Posições\t\t    JOGO');
     console.log(
@@ -37,10 +37,10 @@ function imprimeMatriz(matriz, placar) {
 function anunciaVencedor(vencedor, matriz, placar) {
     let mensagem;
     if (vencedor === 'X') {
-        mensagem = '\tVOCÊ VENCEU!!!\t☜(ﾟヮﾟ☜)\n';
+        mensagem = "\tJOGADOR 'X' VENCEU!!!\t☜(ﾟヮﾟ☜)\n";
         placar['Jogador'] += 1;
     } else if (vencedor === 'O') {
-        mensagem = '\tO COMPUTADOR VENCEU!!!\t(╯°□°）╯︵ ┻━┻\n';
+        mensagem = "\tJOGADOR 'O' VENCEU!!!\t(╯°□°）╯︵ ┻━┻\n";
         placar['Computador'] += 1;
     } else mensagem = '\tDEU VELHA!!!\t¯_(ツ)_/¯\n';
     imprimeMatriz(matriz, placar);
@@ -50,12 +50,12 @@ function anunciaVencedor(vencedor, matriz, placar) {
 function anunciaCampeao(placar) {
     let mensagem;
     console.log(
-        `\n\tJOGADOR ${placar.Jogador} x ${placar.Computador} COMPUTADOR\n`,
+        `\n      JOGADOR[X] ${placar.Jogador} x ${placar.Computador} JOGADOR[O]\n`,
     );
     if (placar['Jogador'] > placar['Computador']) {
-        mensagem = '\tVOCÊ FOI O GRANDE CAMPEÃO!!!\t☜(ﾟヮﾟ☜)\n';
+        mensagem = "\tJOGADOR 'X' FOI O GRANDE CAMPEÃO!!!\t☜(ﾟヮﾟ☜)\n";
     } else if (placar['Jogador'] < placar['Computador']) {
-        mensagem = '\tO COMPUTADOR FOI O GRANDE CAMPEÃO!!!\t(╯°□°）╯︵ ┻━┻\n';
+        mensagem = "\tJOGADOR 'O' FOI O GRANDE CAMPEÃO!!!\t(╯°□°）╯︵ ┻━┻\n";
     } else mensagem = '\tEMPATOU!!! NÃO TEMOS UM CAMPEÃO!!!\t¯_(ツ)_/¯\n';
     console.log(mensagem);
 }
@@ -140,10 +140,12 @@ function computadorJoga(matriz) {
     }
 }
 
-function lerJogada(matriz) {
+function lerJogada(matriz, marca) {
     while (true) {
         try {
-            const jogada = parseInt(prompt(`Jogar em qual posição? `));
+            const jogada = parseInt(
+                prompt(`JOGADOR ${marca}: Jogar em qual Posição? `),
+            );
             if (isNaN(jogada) || jogada < 1 || jogada > 9)
                 throw '\t\t\t\tposição inválida... [1:9]';
             else if (!validaPosicao(jogada, matriz))
@@ -219,9 +221,29 @@ function matrizCheia(matriz) {
     return true;
 }
 
+function versusAI() {
+    console.log('\t\tJOGO DA VELHA\n');
+    console.log('Você pode jogar o Jogo da Velha sozinho contra um amigo');
+    console.log('[1] Jogar Sozinho\t\t[2] Jogar com um Amigo\n');
+    while (true) {
+        try {
+            const vsAI = parseInt(prompt('Entre com a opção desejada: '));
+            if (vsAI === 1) {
+                return true;
+            } else if (vsAI === 2) {
+                return false;
+            } else if (isNaN(vsAI) || vsAI < 1 || vsAI > 2)
+                throw 'inválido... entre com [1] ou [2]';
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 function main() {
-    let matriz = [];
-    let placar = { Jogador: 0, Computador: 0 };
+    const matriz = [];
+    const placar = { Jogador: 0, Computador: 0 };
+    const vsAI = versusAI();
     let vencedor = false;
     let indica_turno = Math.floor(Math.random() * 2);
     iniciaMatriz(matriz);
@@ -229,8 +251,9 @@ function main() {
 
     loopPrincipal: while (true) {
         if (indica_turno % 2 === 0)
-            escreveJogada(lerJogada(matriz), matriz, 'X');
-        else escreveJogada(computadorJoga(matriz), matriz, 'O');
+            escreveJogada(lerJogada(matriz, 1), matriz, 'X');
+        else if (vsAI) escreveJogada(computadorJoga(matriz), matriz, 'O');
+        else escreveJogada(lerJogada(matriz, 2), matriz, 'O');
 
         vencedor = checaVencedor(matriz);
 
@@ -240,13 +263,13 @@ function main() {
                 novaRodada(matriz, placar);
                 indica_turno = (indica_turno % 2) + 1;
                 continue loopPrincipal;
-            } else break loopPrincipal;
+            } else {
+                anunciaCampeao(placar);
+                break loopPrincipal;
+            }
         }
-
         indica_turno++;
         imprimeMatriz(matriz, placar);
     }
-    anunciaCampeao(placar);
 }
-
 main();
